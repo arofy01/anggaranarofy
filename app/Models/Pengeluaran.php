@@ -1,16 +1,19 @@
 <?php
-
 namespace App\Models;
 
-use App\Models\Admin;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class Pengeluaran extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['nama_pengeluaran', 'admin_id', 'jumlah', 'anggaran_id'];
+    protected $fillable = [
+        'nama_pengeluaran',
+        'admin_id',
+        'jumlah',
+        'anggarans_id',
+    ];
 
     public function admin()
     {
@@ -19,6 +22,6 @@ class Pengeluaran extends Model
 
     public function anggaran()
     {
-        return $this->belongsTo(Anggaran::class);
+        return $this->belongsTo(Anggaran::class, 'anggarans_id');
     }
 }

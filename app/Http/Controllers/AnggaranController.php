@@ -49,6 +49,13 @@ class AnggaranController extends Controller
             'sumber' => 'required|string|max:255',
             'nominal' => 'required|numeric',
         ]);
+          // Update data Anggaran
+          $anggaran->update([
+            'tahun' => $request->tahun,
+            'nama_anggaran' => $request->nama_anggaran,
+            'sumber' => $request->sumber,
+            'nominal' => $request->nominal,
+        ]);
 
         $anggaran->update($request->all());
 

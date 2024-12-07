@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -9,10 +8,11 @@ class Admin extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['nama', 'username', 'password', 'jabatan', 'alamat'];
-
-    public function pengeluarans()
-    {
-        return $this->hasMany(Pengeluaran::class);
-    }
+    protected $fillable = [
+        'nama',
+        'username',
+        'password',
+        'jabatan',
+        'alamat',
+    ];
 }
