@@ -2,52 +2,67 @@
 
 @section('content')
 <div class="container">
-    <h1 class="mb-4">Daftar Pengeluaran</h1>
-    <a href="{{ route('pengeluaran.create') }}" class="btn btn-primary mb-3">Tambah Pengeluaran</a>
-
-    @if(session('success'))
-        <div class="alert alert-success">
-            {{ session('success') }}
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h4 class="mb-0">Daftar Pengeluaran</h4>
+            <a href="{{ route('pengeluaran.create') }}" class="btn btn-primary">Tambah Pengeluaran</a>
         </div>
-    @endif
+        
+        <div class="card-body">
+            @if(session('success'))
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    {{ session('success') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @endif
 
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>#</th>
-                <th>Nama Pengeluaran</th>
-                <th>Admin</th>
-                <th>Jumlah</th>
-                <th>Anggaran</th>
-                <th>Tanggal</th>
-                <th>Aksi</th>
-            </tr>
-        </thead>
-        <tbody>
-            @forelse ($pengeluarans as $pengeluaran)
-                <tr>
-                    <td>{{ $loop->iteration }}</td>
-                    <td>{{ $pengeluaran->nama_pengeluaran }}</td>
-                    <td>{{ $pengeluaran->admin->nama ?? 'Tidak Diketahui' }}</td>
-                    <td>Rp {{ number_format($pengeluaran->jumlah, 2, ',', '.') }}</td>
-                    <td>{{ $pengeluaran->anggaran->nama_anggaran ?? 'Tidak Diketahui' }}</td>
-                    <td>{{ $pengeluaran->created_at->format('d-m-Y') }}</td>
-                    <td>
-                        <a href="{{ route('pengeluaran.edit', $pengeluaran->id) }}" class="btn btn-warning btn-sm">Edit</a>
-                        <form action="{{ route('pengeluaran.destroy', $pengeluaran->id) }}" method="POST">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger">Hapus</button>
-                        </form>
-                        
-                    </td>
-                </tr>
-            @empty
-                <tr>
-                    <td colspan="7" class="text-center">Belum ada data pengeluaran</td>
-                </tr>
-            @endforelse
-        </tbody>
-    </table>
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Tahun</th>
+                            <th>Nama Pengeluaran</th>
+                            <th>Keterangan</th>
+                            <th>Nominal</th>
+                            <th>Tanggal Input</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse ($pengeluarans as $pengeluaran)
+                            <tr>
+                                <td>{{ $loop->iteration }}</td>
+                                <td>{{ $pengeluaran->tahun }}</td>
+                                <td>{{ $pengeluaran->nama_pengeluaran }}</td>
+                                <td>{{ $pengeluaran->keterangan ?? '-' }}</td>
+                                <td>Rp {{ number_format($pengeluaran->nominal, 0, ',', '.') }}</td>
+                                <td>{{ $pengeluaran->created_at->format('d/m/Y H:i') }}</td>
+                                <td>
+                                    <div class="d-flex gap-1">
+                                        <a href="{{ route('pengeluaran.edit', $pengeluaran->id) }}" 
+                                           class="btn btn-warning btn-sm">
+                                            Edit
+                                        </a>
+                                        <form action="{{ route('pengeluaran.destroy', $pengeluaran->id) }}" 
+                                              method="POST" 
+                                              onsubmit="return confirm('Apakah Anda yakin ingin menghapus data ini?');">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="7" class="text-center">Belum ada data pengeluaran</td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 </div>
 @endsection

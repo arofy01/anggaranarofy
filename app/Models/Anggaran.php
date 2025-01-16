@@ -15,4 +15,8 @@ class Anggaran extends Model
         'sumber',
         'nominal',
     ];
+    public function admin()
+{
+    return $this->belongsTo(Admin::class);
+}
 }

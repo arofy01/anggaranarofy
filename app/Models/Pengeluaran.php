@@ -9,19 +9,20 @@ class Pengeluaran extends Model
     use HasFactory;
 
     protected $fillable = [
+        'tahun',
         'nama_pengeluaran',
-        'admin_id',
-        'jumlah',
-        'anggarans_id',
+        'keterangan',
+        'nominal',
     ];
 
-    public function admin()
-    {
-        return $this->belongsTo(Admin::class);
-    }
+    protected $casts = [
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+        'nominal' => 'string',
+    ];
 
     public function anggaran()
     {
-        return $this->belongsTo(Anggaran::class, 'anggarans_id');
+        return $this->belongsTo(Anggaran::class, 'tahun', 'tahun');
     }
 }

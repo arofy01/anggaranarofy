@@ -8,83 +8,102 @@ use Illuminate\Http\Request;
 
 class PengeluaranController extends Controller
 {
-    // Menampilkan daftar pengeluaran
     public function index()
     {
-        $pengeluarans = Pengeluaran::with('admin', 'anggaran')->get(); // Ambil data pengeluaran dengan relasi
+        $pengeluarans = Pengeluaran::orderBy('tahun', 'desc')->get();
         return view('pengeluaran.index', compact('pengeluarans'));
     }
 
-    // Menampilkan form tambah pengeluaran
     public function create()
     {
-        $admins = Admin::all(); // Data admin untuk dropdown
-        $anggarans = Anggaran::all(); // Data anggaran untuk dropdown
-        return view('pengeluaran.create', compact('admins', 'anggarans'));
+        $tahunSekarang = date('Y');
+        $tahunList = range($tahunSekarang - 5, $tahunSekarang + 5);
+        
+        // Get anggaran data for all years
+        $anggaranList = Anggaran::all()->groupBy('tahun')->map(function ($items) {
+            return [
+                'total' => $items->sum('nominal'),
+                'used' => Pengeluaran::where('tahun', $items->first()->tahun)->sum('nominal')
+            ];
+        });
+
+        return view('pengeluaran.create', compact('tahunList', 'anggaranList'));
     }
 
-    // Menyimpan data pengeluaran
     public function store(Request $request)
     {
         $request->validate([
+            'tahun' => 'required|integer|min:2000|max:2099',
             'nama_pengeluaran' => 'required|string|max:255',
-            'admin_id' => 'required|exists:admins,id',
-            'jumlah' => 'required|numeric|min:0',
-            'anggarans_id' => 'required|exists:anggarans,id',
+            'keterangan' => 'nullable|string|max:255',
+            'nominal' => 'required|string|regex:/^\d+$/',
         ]);
+
+        // Bersihkan format nominal
+        $nominal = str_replace('.', '', $request->nominal);
+
+        // Validasi terhadap sisa anggaran
+        $totalAnggaran = Anggaran::where('tahun', $request->tahun)->sum('nominal');
+        $totalPengeluaran = Pengeluaran::where('tahun', $request->tahun)->sum('nominal');
+        $sisa = $totalAnggaran - $totalPengeluaran;
+
+        if ($nominal > $sisa) {
+            return back()
+                ->withInput()
+                ->withErrors(['nominal' => 'Nominal melebihi sisa anggaran yang tersedia (Rp ' . number_format($sisa, 0, ',', '.') . ')']);
+        }
 
         Pengeluaran::create([
+            'tahun' => $request->tahun,
             'nama_pengeluaran' => $request->nama_pengeluaran,
-            'admin_id' => $request->admin_id,
-            'jumlah' => $request->jumlah,
-            'anggarans_id' => $request->anggarans_id,
+            'keterangan' => $request->keterangan,
+            'nominal' => $nominal,
+            'admin_id' => auth()->id(),
         ]);
 
-        return redirect()->route('pengeluaran.index')->with('success', 'Pengeluaran berhasil ditambahkan!');
+        return redirect()->route('pengeluaran.index')
+            ->with('success', 'Pengeluaran berhasil ditambahkan!');
     }
 
-    // Menampilkan detail pengeluaran (opsional)
     public function show(Pengeluaran $pengeluaran)
     {
         return view('pengeluaran.show', compact('pengeluaran'));
     }
 
-    // Menampilkan form edit pengeluaran (opsional)
-    public function edit($id)
-{
-    $pengeluaran = Pengeluaran::findOrFail($id); // Pastikan model ditemukan
-    $anggarans = Anggaran::all(); // Ambil data anggaran jika perlu untuk dropdown
+    public function edit(Pengeluaran $pengeluaran)
+    {
+        $tahunSekarang = date('Y');
+        $tahunList = range($tahunSekarang - 5, $tahunSekarang + 5);
+        return view('pengeluaran.edit', compact('pengeluaran', 'tahunList'));
+    }
 
-    return view('pengeluaran.edit', compact('pengeluaran', 'anggarans'));
-}
+    public function update(Request $request, Pengeluaran $pengeluaran)
+    {
+        $request->validate([
+            'tahun' => 'required|integer|min:2000|max:2099',
+            'nama_pengeluaran' => 'required|string|max:255',
+            'keterangan' => 'nullable|string|max:255',
+            'nominal' => 'required|string|regex:/^\d+$/', // Changed to string validation with digits only
+        ]);
 
-    
-public function update(Request $request, $id)
-{
-    $request->validate([
-        'nama_pengeluaran' => 'required|string|max:255',
-        'jumlah' => 'required|numeric|min:1',
-        'anggaran_id' => 'required|exists:anggarans,id',
-    ]);
+        // Bersihkan format nominal (hapus titik sebagai pemisah ribuan)
+        $nominal = str_replace('.', '', $request->nominal);
 
-    $pengeluaran = Pengeluaran::findOrFail($id);
-    $pengeluaran->update([
-        'nama_pengeluaran' => $request->nama_pengeluaran,
-        'jumlah' => $request->jumlah,
-        'anggaran_id' => $request->anggaran_id,
-    ]);
+        $pengeluaran->update([
+            'tahun' => $request->tahun,
+            'nama_pengeluaran' => $request->nama_pengeluaran,
+            'keterangan' => $request->keterangan,
+            'nominal' => $nominal,
+        ]);
 
-    return redirect()->route('pengeluaran.index')->with('success', 'Data pengeluaran berhasil diperbarui.');
-}
+        return redirect()->route('pengeluaran.index')
+            ->with('success', 'Pengeluaran berhasil diperbarui!');
+    }
 
-    
-    
-
-    // Menghapus pengeluaran
     public function destroy(Pengeluaran $pengeluaran)
     {
         $pengeluaran->delete();
-        return redirect()->route('pengeluaran.index')->with('success', 'Pengeluaran berhasil dihapus!');
+        return redirect()->route('pengeluaran.index')
+            ->with('success', 'Pengeluaran berhasil dihapus!');
     }
-    
 }

@@ -28,7 +28,8 @@ class AnggaranController extends Controller
 
         Anggaran::create($request->all());
 
-        return redirect()->route('anggaran.index')->with('success', 'Anggaran berhasil ditambahkan!');
+        return redirect()->route('anggaran.index')
+            ->with('success', 'Anggaran berhasil ditambahkan!');
     }
 
     public function show(Anggaran $anggaran)
@@ -67,5 +68,17 @@ class AnggaranController extends Controller
         $anggaran->delete();
 
         return redirect()->route('anggaran.index')->with('success', 'Anggaran berhasil dihapus!');
+    }
+    public function search(Request $request)
+    {
+        $keyword = $request->input('keyword');
+
+        // Query pencarian data berdasarkan nama_anggaran atau sumber
+        $results = Anggaran::where('nama_anggaran', 'like', "%$keyword%")
+            ->orWhere('sumber', 'like', "%$keyword%")
+            ->get();
+
+        // Return hasil pencarian ke view
+        return view('anggaran.search', ['results' => $results, 'keyword' => $keyword]);
     }
 }

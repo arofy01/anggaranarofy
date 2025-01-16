@@ -1,18 +1,38 @@
 <?php
+
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 
-class Admin extends Model
+class Admin extends Authenticatable
 {
-    use HasFactory;
+    use Notifiable;
+
+    protected $guard = 'admin';
 
     protected $fillable = [
-        'nama',
-        'username',
+        'name',
+        'email',
         'password',
-        'jabatan',
-        'alamat',
     ];
+
+    protected $hidden = [
+        'password',
+        'remember_token',
+    ];
+    public function pengeluarans()
+{
+    return $this->hasMany(Pengeluaran::class);
+}
+
+public function reports()
+{
+    return $this->hasMany(Report::class);
+}
+
+public function anggarans()
+{
+    return $this->hasMany(Anggaran::class);
+}
 }
