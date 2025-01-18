@@ -161,26 +161,41 @@
                         
                         <div class="mb-3">
                             <label for="current_password" class="form-label">Password Saat Ini</label>
-                            <input type="password" class="form-control @error('current_password') is-invalid @enderror" 
-                                   id="current_password" name="current_password">
-                            @error('current_password')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
+                            <div class="input-group">
+                                <input type="password" class="form-control @error('current_password') is-invalid @enderror" 
+                                       id="current_password" name="current_password">
+                                <button class="btn btn-outline-secondary" type="button" onclick="togglePassword('current_password')">
+                                    <i class="fas fa-eye" id="current_password_icon"></i>
+                                </button>
+                                @error('current_password')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
                         </div>
 
                         <div class="mb-3">
                             <label for="password" class="form-label">Password Baru</label>
-                            <input type="password" class="form-control @error('password') is-invalid @enderror" 
-                                   id="password" name="password">
-                            @error('password')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
+                            <div class="input-group">
+                                <input type="password" class="form-control @error('password') is-invalid @enderror" 
+                                       id="password" name="password">
+                                <button class="btn btn-outline-secondary" type="button" onclick="togglePassword('password')">
+                                    <i class="fas fa-eye" id="password_icon"></i>
+                                </button>
+                                @error('password')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
                         </div>
 
                         <div class="mb-3">
                             <label for="password_confirmation" class="form-label">Konfirmasi Password Baru</label>
-                            <input type="password" class="form-control" 
-                                   id="password_confirmation" name="password_confirmation">
+                            <div class="input-group">
+                                <input type="password" class="form-control" 
+                                       id="password_confirmation" name="password_confirmation">
+                                <button class="btn btn-outline-secondary" type="button" onclick="togglePassword('password_confirmation')">
+                                    <i class="fas fa-eye" id="password_confirmation_icon"></i>
+                                </button>
+                            </div>
                         </div>
 
                         <button type="submit" class="btn btn-password">
@@ -207,6 +222,21 @@
             });
         });
     });
+
+    function togglePassword(inputId) {
+        const input = document.getElementById(inputId);
+        const icon = document.getElementById(inputId + '_icon');
+        
+        if (input.type === 'password') {
+            input.type = 'text';
+            icon.classList.remove('fa-eye');
+            icon.classList.add('fa-eye-slash');
+        } else {
+            input.type = 'password';
+            icon.classList.remove('fa-eye-slash');
+            icon.classList.add('fa-eye');
+        }
+    }
 </script>
 @endpush
 @endsection

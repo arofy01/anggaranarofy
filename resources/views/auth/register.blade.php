@@ -102,7 +102,8 @@
                         </button>
                     </div>
                     <small class="text-muted">
-                        Password harus minimal 8 karakter, mengandung huruf besar, huruf kecil, angka, dan simbol
+                        Password harus minimal 8 karakter, mengandung huruf besar, huruf kecil, angka, dan simbol.
+                        Contoh: Bappeda@2024
                     </small>
                 </div>
 

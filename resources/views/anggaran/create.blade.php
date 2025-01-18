@@ -9,7 +9,17 @@
 
             <div class="mb-3">
                 <label for="tahun" class="form-label">Tahun</label>
-                <input type="number" class="form-control" id="tahun" name="tahun" required>
+                <select class="form-select" id="tahun" name="tahun" required>
+                    <option value="">Pilih Tahun</option>
+                    @php
+                        $currentYear = date('Y');
+                        $startYear = $currentYear - 5;
+                        $endYear = $currentYear + 5;
+                    @endphp
+                    @for($year = $startYear; $year <= $endYear; $year++)
+                        <option value="{{ $year }}" {{ $year == $currentYear ? 'selected' : '' }}>{{ $year }}</option>
+                    @endfor
+                </select>
             </div>
 
             <div class="mb-3">

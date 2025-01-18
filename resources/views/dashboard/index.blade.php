@@ -23,6 +23,12 @@
                                 <h3 class="stat-value" id="totalAnggaran">Rp 0</h3>
                             </div>
                         </div>
+                        <div class="mt-3">
+                            <a href="{{ route('anggaran.index') }}" class="btn btn-primary btn-selengkapnya w-100">
+                                <span>Selengkapnya</span>
+                                <i class="fas fa-arrow-right ms-2"></i>
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -38,6 +44,12 @@
                                 <h6 class="stat-title">Total Pengeluaran</h6>
                                 <h3 class="stat-value" id="totalPengeluaran">Rp 0</h3>
                             </div>
+                        </div>
+                        <div class="mt-3">
+                            <a href="{{ route('pengeluaran.index') }}" class="btn btn-danger btn-selengkapnya w-100">
+                                <span>Selengkapnya</span>
+                                <i class="fas fa-arrow-right ms-2"></i>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -62,6 +74,12 @@
                                  aria-valuemin="0" 
                                  aria-valuemax="100">
                             </div>
+                        </div>
+                        <div class="mt-3">
+                            <a href="{{ route('report.index') }}" class="btn btn-success btn-selengkapnya w-100">
+                                <span>Selengkapnya</span>
+                                <i class="fas fa-arrow-right ms-2"></i>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -242,6 +260,24 @@
     background-color: #1e3c72;
     border-color: #1e3c72;
     color: #fff;
+}
+
+.btn-selengkapnya {
+    border-radius: 10px;
+    padding: 0.75rem 1.5rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+.btn-selengkapnya:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,.2);
 }
 </style>
 @endpush

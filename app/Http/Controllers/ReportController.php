@@ -4,23 +4,30 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Pengeluaran;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
 
 class ReportController extends Controller
 {
     public function index(Request $request)
     {
-        $start_date = $request->input('start_date');
-        $end_date = $request->input('end_date');
+        $query = Pengeluaran::query();
 
-        if ($start_date && $end_date) {
-            $reports = Pengeluaran::whereBetween('created_at', [$start_date, $end_date])
-                ->orderBy('tahun', 'desc')
-                ->get();
-        } else {
-            $reports = Pengeluaran::orderBy('tahun', 'desc')->get();
+        if ($request->filled('start_date') && $request->filled('end_date')) {
+            $start_date = Carbon::parse($request->start_date)->startOfDay();
+            $end_date = Carbon::parse($request->end_date)->endOfDay();
+            
+            $query->whereBetween('created_at', [$start_date, $end_date]);
         }
 
-        return view('report.index', compact('reports', 'start_date', 'end_date'));
+        $reports = $query->orderBy('tahun', 'desc')
+                        ->orderBy('created_at', 'desc')
+                        ->get();
+
+        return view('report.index', [
+            'reports' => $reports,
+            'start_date' => $request->start_date,
+            'end_date' => $request->end_date
+        ]);
     }
 
     public function create()
@@ -78,10 +85,10 @@ class ReportController extends Controller
                     'end_date' => $request->end_date
                 ]);
                 
-                $reports = Pengeluaran::whereBetween('created_at', [
-                    $request->start_date . ' 00:00:00',
-                    $request->end_date . ' 23:59:59'
-                ])
+                $start_date = Carbon::parse($request->start_date)->startOfDay();
+                $end_date = Carbon::parse($request->end_date)->endOfDay();
+
+                $reports = Pengeluaran::whereBetween('created_at', [$start_date, $end_date])
                 ->orderBy('tahun', 'desc')
                 ->orderBy('created_at', 'desc')
                 ->get();

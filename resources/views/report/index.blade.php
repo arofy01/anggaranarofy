@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="container">
-    <div class="card">
+    <div class="card mb-4">
         <div class="card-header">
             <div class="d-flex justify-content-between align-items-center">
                 <h5 class="mb-0">Daftar Laporan</h5>
@@ -36,7 +36,6 @@
                 </form>
             </div>
 
-            <!-- Table -->
             <div class="table-responsive">
                 <table class="table table-hover">
                     <thead>
@@ -47,54 +46,45 @@
                             <th>Keterangan</th>
                             <th>Nominal</th>
                             <th>Tanggal Input</th>
-                            <!-- <th>Aksi</th> -->
                         </tr>
                     </thead>
                     <tbody>
                         @forelse ($reports as $report)
-                            <tr>
-                                <td>{{ $loop->iteration }}</td>
-                                <td>{{ $report->tahun }}</td>
-                                <td>{{ $report->nama_pengeluaran }}</td>
-                                <td>{{ $report->keterangan ?? '-' }}</td>
-                                <td class="">Rp {{ number_format($report->nominal, 0, ',', '.') }}</td>
-                                <td>{{ $report->created_at ? $report->created_at->format('d/m/Y H:i') : '-' }}</td>
-                                <td class="text-center">
-                                    <!-- <a href="{{ route('report.show', $report->id) }}" class="btn btn-sm btn-info">
-                                        <i class="fas fa-eye"></i>
-                                    </a> -->
-                                </td>
-                            </tr>
+                        <tr>
+                            <td>{{ $loop->iteration }}</td>
+                            <td>{{ $report->tahun }}</td>
+                            <td>{{ $report->nama_pengeluaran }}</td>
+                            <td>{{ $report->keterangan ?? '-' }}</td>
+                            <td>Rp {{ number_format($report->nominal, 0, ',', '.') }}</td>
+                            <td>{{ $report->created_at->format('d/m/Y') }}</td>
+                        </tr>
                         @empty
-                            <tr>
-                                <td colspan="7" class="text-center">Tidak ada data</td>
-                            </tr>
+                        <tr>
+                            <td colspan="6" class="text-center">Tidak ada data</td>
+                        </tr>
                         @endforelse
                     </tbody>
                 </table>
             </div>
-
-            <!-- Summary -->
-            @if($reports->isNotEmpty())
-            <div class="mt-4">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title text-center mb-3">Ringkasan</h5>
-                        <div class="row align-items-center">
-                            <div class="col-8 border-end">
-                                <p class="mb-2">Total Pengeluaran:</p>
-                                <h2 class="text-success mb-0">Rp {{ number_format($reports->sum('nominal'), 0, ',', '.') }}</h2>
-                            </div>
-                            <div class="col-4 text-center">
-                                <p class="mb-2">Jumlah Transaksi:</p>
-                                <h4 class="mb-0">{{ $reports->count() }}</h4>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            @endif
         </div>
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Validasi tanggal
+        const startDate = document.getElementById('start_date');
+        const endDate = document.getElementById('end_date');
+
+        startDate.addEventListener('change', function() {
+            endDate.min = this.value;
+        });
+
+        endDate.addEventListener('change', function() {
+            startDate.max = this.value;
+        });
+    });
+</script>
+@endpush

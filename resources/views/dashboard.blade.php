@@ -1,64 +1,71 @@
-@extends('layouts.app')
+@extends('layouts.masterlw')
 
-@section('content')
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-12 text-center mb-4">
-                <div class="clock-container p-3 rounded shadow-sm">
-                    <div id="clock" class="display-4 text-primary"></div>
-                    <div id="date" class="text-muted"></div>
+@section('konten')
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-4">
+            <div class="card mb-4" style="background-color: #fff; border-radius: 10px;">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div style="background-color: #e3f2fd; padding: 10px; border-radius: 10px; margin-right: 15px;">
+                            <i class="fas fa-money-bill text-primary" style="font-size: 24px;"></i>
+                        </div>
+                        <div>
+                            <div class="text-muted">Total Anggaran</div>
+                            <h3 class="mb-0">Rp 3.101.000.000</h3>
+                        </div>
+                    </div>
+                    <div class="mt-3">
+                        <a href="{{ route('anggaran.index') }}" class="btn btn-primary btn-selengkapnya w-100">
+                            <span>Selengkapnya</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
                 </div>
             </div>
-            <div class="col-md-12 mb-4">
-                <div class="marquee-container p-2 bg-primary text-white rounded">
-                    <marquee behavior="scroll" direction="left" scrollamount="5">
-                        Selamat datang di Sistem Informasi Anggaran BAPPEDA - Mari bersama-sama mengelola anggaran dengan efektif dan transparan 📊
-                    </marquee>
+        </div>
+        <div class="col-lg-4">
+            <div class="card mb-4" style="background-color: #fff; border-radius: 10px;">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div style="background-color: #ffebee; padding: 10px; border-radius: 10px; margin-right: 15px;">
+                            <i class="fas fa-file-invoice-dollar text-danger" style="font-size: 24px;"></i>
+                        </div>
+                        <div>
+                            <div class="text-muted">Total Pengeluaran</div>
+                            <h3 class="mb-0">Rp 110.000.500</h3>
+                        </div>
+                    </div>
+                    <div class="mt-3">
+                        <a href="{{ route('pengeluaran.index') }}" class="btn btn-danger btn-selengkapnya w-100">
+                            <span>Selengkapnya</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
                 </div>
             </div>
-            <div class="col-md-12">
-                <h1 class="mb-4">Selamat Datang di Dashboard</h1>
-                <p>Ini adalah halaman dashboard Anda.</p>
+        </div>
+        <div class="col-lg-4">
+            <div class="card mb-4" style="background-color: #fff; border-radius: 10px;">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div style="background-color: #e8f5e9; padding: 10px; border-radius: 10px; margin-right: 15px;">
+                            <i class="fas fa-chart-pie text-success" style="font-size: 24px;"></i>
+                        </div>
+                        <div>
+                            <div class="text-muted">Persentase Penggunaan</div>
+                            <h3 class="mb-0">3.5%</h3>
+                        </div>
+                    </div>
+                    <div class="mt-3">
+                        <a href="{{ route('report.index') }}" class="btn btn-success btn-selengkapnya w-100">
+                            <span>Selengkapnya</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-
-    <style>
-        .clock-container {
-            background-color: #f8f9fa;
-            border: 1px solid #dee2e6;
-        }
-        .marquee-container {
-            overflow: hidden;
-        }
-        #clock {
-            font-family: 'Arial', sans-serif;
-            font-weight: bold;
-        }
-        #date {
-            font-size: 1.2rem;
-        }
-    </style>
-
-    <script>
-        function updateClock() {
-            const now = new Date();
-            const clock = document.getElementById('clock');
-            const dateDisplay = document.getElementById('date');
-            
-            // Format time
-            const hours = String(now.getHours()).padStart(2, '0');
-            const minutes = String(now.getMinutes()).padStart(2, '0');
-            const seconds = String(now.getSeconds()).padStart(2, '0');
-            clock.textContent = `${hours}:${minutes}:${seconds}`;
-            
-            // Format date
-            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-            dateDisplay.textContent = now.toLocaleDateString('id-ID', options);
-        }
-
-        // Update clock every second
-        setInterval(updateClock, 1000);
-        updateClock(); // Initial call
-    </script>
+</div>
 @endsection
